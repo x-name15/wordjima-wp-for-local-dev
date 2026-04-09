@@ -1,0 +1,60 @@
+services:
+  wordpress:
+    image: wordpress:6.9.4-php8.4
+    container_name: wordpress_app
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    env_file:
+      - .env
+    environment:
+      WORDPRESS_DB_HOST: ${DB_HOST}
+      WORDPRESS_DB_NAME: ${DB_DATABASE}
+      WORDPRESS_DB_USER: ${DB_USERNAME}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX}
+      WORDPRESS_DEBUG: ${WORDPRESS_DEBUG}
+      WORDPRESS_AUTH_KEY: ${AUTH_KEY}
+      WORDPRESS_SECURE_AUTH_KEY: ${SECURE_AUTH_KEY}
+      WORDPRESS_LOGGED_IN_KEY: ${LOGGED_IN_KEY}
+      WORDPRESS_NONCE_KEY: ${NONCE_KEY}
+      WORDPRESS_AUTH_SALT: ${AUTH_SALT}
+      WORDPRESS_SECURE_AUTH_SALT: ${SECURE_AUTH_SALT}
+      WORDPRESS_LOGGED_IN_SALT: ${LOGGED_IN_SALT}
+      WORDPRESS_NONCE_SALT: ${NONCE_SALT}
+    volumes:
+      - ./wordpress:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - wp_network
+ 
+  mysql:
+    image: mysql:8.0
+    container_name: wordpress_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - wp_network
+ 
+volumes:
+  mysql_data:
+ 
+networks:
+  wp_network:
+    driver: bridge
