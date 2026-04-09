@@ -1,5 +1,12 @@
 # WordJima
 
+![Docker](https://img.shields.io/badge/Docker-Compose-blue?logo=docker)
+![WordPress](https://img.shields.io/badge/WordPress-6.9.4-blue?logo=wordpress)
+![PHP](https://img.shields.io/badge/PHP-8.4-blue?logo=php)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-blue?logo=mysql)
+![Powershell](https://img.shields.io/badge/Powershell-script-5391FE?logo=powershell)
+![License](https://img.shields.io/badge/License-GNU%20GPL-green?logo=gnu)
+
 Dockerized WordPress for local development.
 
 WordJima is a practical local WordPress environment built with Docker Compose and an automation script for setup, reset, and first-run provisioning.
