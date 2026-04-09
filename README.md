@@ -4,7 +4,6 @@ Dockerized WordPress for local development.
 
 WordJima is a practical local WordPress environment built with Docker Compose and an automation script for setup, reset, and first-run provisioning.
 
-## Why Jima
 ## Why WordJima
 
 - Fast local bootstrap for WordPress + MySQL
