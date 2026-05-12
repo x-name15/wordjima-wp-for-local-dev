@@ -22,39 +22,35 @@ services:
       WORDPRESS_SECURE_AUTH_SALT: ${SECURE_AUTH_SALT}
       WORDPRESS_LOGGED_IN_SALT: ${LOGGED_IN_SALT}
       WORDPRESS_NONCE_SALT: ${NONCE_SALT}
+    
     volumes:
-      - ./wordpress:/var/www/html
+      - ./wp-content:/var/www/html/wp-content
+      - ./wp-config.php:/var/www/html/wp-config.php
+    
     depends_on:
-      mysql:
-        condition: service_healthy
+      - db
     networks:
       - wp_network
- 
-  mysql:
-    image: mysql:8.0
+
+  db:
+    image: mariadb:latest
     container_name: wordpress_db
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: ${DB_DATABASE}
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
     networks:
       - wp_network
- 
+
 volumes:
   mysql_data:
- 
+
 networks:
   wp_network:
     driver: bridge
